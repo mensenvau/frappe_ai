@@ -35,8 +35,10 @@ def check_doctype_json(app_pkg: Path) -> None:
         for key in ("name", "module", "fields"):
             if key not in data:
                 record(FAIL, "doctype-json", f"{jf}: missing '{key}'")
+        # Child tables (istable=1) inherit the parent's permissions and
+        # legitimately declare none.
         perms = data.get("permissions") or []
-        if not perms:
+        if not perms and not data.get("istable"):
             record(FAIL, "doctype-perms", f"{jf}: no permissions (default-deny violated)")
         else:
             record(PASS, "doctype-json", str(jf))
