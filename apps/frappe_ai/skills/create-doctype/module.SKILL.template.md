@@ -1,6 +1,6 @@
 ---
 name: <module-name>
-description: AI contract for the <Module Label> module — its domain, DocTypes, invariants, and prohibitions. Read before editing anything in this module.
+description: <one sentence — what this module is and when to work in it. This line is what the AI matches against next time, so make it specific.>
 ---
 
 # <Module Label> module
@@ -17,11 +17,19 @@ description: AI contract for the <Module Label> module — its domain, DocTypes,
 
 ## Invariants
 
-- <business rule that must always hold — e.g. "a Widget cannot be Active without an owner">
+- <business rule that must always hold>
 
 ## Relationships
 
 - <Link fields to other DocTypes / modules>
+
+## APIs (whitelisted)
+
+- `frappe_ai.<module>...` — <what it does, who may call it>
+
+## AI hooks (if any)
+
+- <NL command / recommend / summarize this module exposes>
 
 ## Examples
 

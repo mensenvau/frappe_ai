@@ -32,18 +32,46 @@
    invariants, examples, prohibitions). The AI loads full context from a single
    module folder.
 
-8. **The UI is not written freehand.** Use Frappe primitives only —
-   DocType / Workspace / Report / Dashboard Chart / Number Card / List view.
-   No bespoke React/HTML frontend.
+8. **Frontend is a separate React SPA; Frappe is headless (API-only).**
+   Frappe is the backend: DocTypes (data + permissions), whitelisted REST/RPC
+   APIs, jobs, auth. The whole user-facing UI is a separate React app in
+   `frontend/` that talks to Frappe over HTTP (token/session auth). The Frappe
+   **Desk is NOT the product UI** — it is admin-only (developers/superadmin).
+   - Backend rule still holds: business logic, validation, and permissions live
+     in Frappe (controllers + DocType perms), NOT only in React. React must
+     never be the only place a rule is enforced — the API enforces it too.
+   - Every screen the React app needs is backed by a whitelisted API or the
+     standard Frappe REST resource API; document each endpoint in the module's
+     `SKILL.md`.
+
+9. **AI layer (Claude API).** "AI for management everywhere" is a first-class,
+   modular layer, not ad-hoc calls:
+   - All model calls go through one service (`frappe_ai/ai/` — a thin Anthropic
+     client) with **prompt caching**, the latest Claude model, and every call
+     logged (DocType `AI Interaction`: prompt, response, tokens, cost, actor).
+   - Three capabilities, each opt-in per module: (a) **natural-language command**
+     ("compute this month's payroll", "find idle engineers") → proposes an
+     action a human confirms; (b) **assist/recommend** (match employee→project,
+     estimate price/duration, screen candidates, score time-off) → suggestion +
+     human approval; (c) **summarize/report** (weekly digest, risk alerts).
+   - AI never writes to the DB directly or bypasses permissions: it proposes,
+     a permission-checked API applies. AI output is advisory unless a human (or
+     an explicit rule) confirms. Secrets (`ANTHROPIC_API_KEY`) come from env /
+     site config, never committed.
 
 ---
 
 ### Naming & layout conventions (enforced by skills)
 
+- **Product brand = "Databek"** (titles, public site, emails). `frappe_ai` is
+  only the backend app package name.
 - App name `frappe_ai` — lowercase, snake_case (Frappe requirement).
 - Module folder = snake_case under `frappe_ai/`; module label in `modules.txt`.
 - DocType folder = snake_case of the DocType name; JSON + `.py` + optional `.js`
   share that folder name.
 - Controller class = PascalCase of the DocType name.
-- Whitelisted API methods carry `@frappe.whitelist()` and validate permissions.
+- Whitelisted API methods carry `@frappe.whitelist()` and validate permissions
+  explicitly (whitelisting ≠ authorization).
 - Keep the `# >>> FRAPPEAI:<section>:start / <<< end` markers in `hooks.py` intact.
+- Public React site lives in `frontend/` (own package.json/build); consumes only
+  whitelisted public APIs. No business rule lives solely in React.

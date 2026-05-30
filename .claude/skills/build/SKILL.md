@@ -19,10 +19,15 @@ If the request is purely about **access/roles** use `/manage-access`; purely
 about **existing menus/dashboards** use `/manage-ui`; about **running/deploying**
 use `/manage-deploy`.
 
-## Always read first
+## Always read first (this is how you "remember" across sessions)
 
 1. [`apps/frappe_ai/RULES.md`](../../../apps/frappe_ai/RULES.md) — global law.
-2. The target module's `SKILL.md` if extending an existing module.
+2. [`apps/frappe_ai/MODULES.md`](../../../apps/frappe_ai/MODULES.md) — the index
+   of every module already built. **Read this first to know what exists.**
+3. [`ARCHITECTURE.md`](../../../ARCHITECTURE.md) — the overall Databek plan +
+   build phases, so a new feature lands in the right module.
+4. The target module's `SKILL.md` if extending an existing module (found via
+   MODULES.md).
 
 ## Procedure (do as much as the request needs, in order)
 
@@ -39,9 +44,14 @@ use `/manage-deploy`.
    part to `/manage-access` (or apply default-deny perms inline).
 6. **Freeze** — `export-fixtures` for any config records
    ([contract](../../../apps/frappe_ai/skills/export-fixtures/SKILL.md)).
-7. **Run** — apply via `/manage-deploy` (migrate + build), then point the user to
+7. **Remember** — write/update the module's `SKILL.md` (use
+   [`module.SKILL.template.md`](../../../apps/frappe_ai/skills/create-doctype/module.SKILL.template.md))
+   AND add/update its row in
+   [`apps/frappe_ai/MODULES.md`](../../../apps/frappe_ai/MODULES.md). This is what
+   lets the next `/build` find and respect this module. **Do not skip this.**
+8. **Run** — apply via `/manage-deploy` (migrate + build), then point the user to
    <http://localhost:8080>.
-8. **Log** — append one line per artifact to `apps/frappe_ai/frappe_ai/CHANGELOG.md`.
+9. **Log** — append one line per artifact to `apps/frappe_ai/frappe_ai/CHANGELOG.md`.
 
 ## Rules
 
