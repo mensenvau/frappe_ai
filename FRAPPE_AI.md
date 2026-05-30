@@ -1,9 +1,9 @@
-# Mason — Build Brief for Claude Code
+# Frappe AI — Build Brief for Claude Code
 
 > This document is handed to Claude Code. Goal: an internal-tools platform built on
 > top of the Frappe Framework, **extensible by AI**, starting from an **empty
-> foundation**. `Mason` is a working name (metaphor: AI = mason, laying modules onto
-> the Frappe foundation brick by brick). If you change the name, replace `mason`
+> foundation**. `Frappe AI` is a working name (metaphor: AI = frappe_ai, laying modules onto
+> the Frappe foundation brick by brick). If you change the name, replace `frappe_ai`
 > with the new name throughout the document and code (a Frappe app name must be
 > lowercase, snake_case).
 
@@ -25,13 +25,13 @@
 
 ## 1. What the app is
 
-Mason is an internal-tools platform built on top of Frappe that the AI extends
+Frappe AI is an internal-tools platform built on top of Frappe that the AI extends
 itself. The idea: **you say it → the AI writes/edits Frappe artifacts (DocType,
 controller, hooks, fixtures) → you `docker run` → it goes live in the Frappe Desk
 UI.**
 
 You don't build the engine — registry, routing, schema→UI, RBAC, migration,
-background jobs, auth/SSO, asset build — Frappe provides all of it. What Mason adds:
+background jobs, auth/SSO, asset build — Frappe provides all of it. What Frappe AI adds:
 (1) conventions and skills for the AI, (2) a self-describing `SKILL.md` contract per
 module, (3) a global `RULES.md`, (4) a fixtures flow for reproducibility and a single
 "run" command.
@@ -49,20 +49,20 @@ The UI is also Frappe (Desk). There is NO separate React frontend.
 - **developer_mode = 1** — DocType and config changes are written to disk as JSON
   files (not from the UI). Because of this they land in version control and the AI
   can read/edit them. This is the basis of the whole loop.
-- A single custom Frappe app: **`mason`**.
+- A single custom Frappe app: **`frappe_ai`**.
 
 ---
 
 ## 3. Repo structure
 
 ```
-mason-platform/                  # git repo
+frappe_ai-platform/                  # git repo
   docker/                        # frappe_docker compose + entrypoint
     docker-compose.yml
     .env
   apps/
-    mason/                       # custom Frappe app (bench new-app mason)
-      mason/
+    frappe_ai/                       # custom Frappe app (bench new-app frappe_ai)
+      frappe_ai/
         hooks.py                 # manifest: doc_events, scheduler_events, fixtures
         modules.txt
         <module>/                # later: business modules go here
@@ -172,9 +172,9 @@ with its own DocTypes + its own `SKILL.md` (the AI contract).
 > Build only the foundation, NOT a business module:
 >
 > 1. Frappe v15 bench with `frappe_docker` + a single empty site (Docker compose).
-> 2. `bench new-app mason` — create the custom app, `install-app` it onto the site.
+> 2. `bench new-app frappe_ai` — create the custom app, `install-app` it onto the site.
 > 3. Set `developer_mode = 1`.
-> 4. Inside the `mason` app create: `RULES.md` (the text above), a `SKILL.md`
+> 4. Inside the `frappe_ai` app create: `RULES.md` (the text above), a `SKILL.md`
 >    template, the `skills/` folder (an empty `SKILL.md` stub for each skill), an
 >    empty `fixtures/`.
 > 5. Confirm `docker run` works: an empty Frappe site, the login page, an empty Desk.
