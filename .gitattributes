@@ -1,0 +1,13 @@
+# Shell scripts MUST be LF — they run inside Linux containers (bash).
+*.sh text eol=lf
+docker/scripts/* text eol=lf
+
+# Keep these LF too (read by the bench / Frappe on Linux).
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.template text eol=lf
+*.snippet text eol=lf
+modules.txt text eol=lf
+patches.txt text eol=lf

@@ -1,0 +1,80 @@
+# ---------------------------------------------------------------------------
+# Mason platform — single-machine dev stack (Frappe v15, no ERPNext)
+# ---------------------------------------------------------------------------
+# Brings up: mariadb + redis (cache & queue) + a Frappe bench container that
+# bind-mounts ../apps/mason into the bench so the AI's edits on the host are
+# live inside the container.
+#
+#   docker compose up -d            # start everything
+#   docker compose logs -f backend  # watch the bench bootstrap
+#   open http://localhost:${HTTP_PORT}
+#
+# The "backend" service runs scripts/entrypoint.sh which is idempotent:
+# first run creates the site + installs mason; later runs just (re)start bench.
+# ---------------------------------------------------------------------------
+
+x-frappe-image: &frappe-image
+  image: frappe/bench:latest
+
+services:
+  mariadb:
+    image: mariadb:10.6
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --skip-innodb-read-only-compressed
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis-cache:
+    image: redis:7-alpine
+    volumes:
+      - redis-cache-data:/data
+
+  redis-queue:
+    image: redis:7-alpine
+    volumes:
+      - redis-queue-data:/data
+
+  backend:
+    <<: *frappe-image
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+    environment:
+      FRAPPE_VERSION: ${FRAPPE_VERSION}
+      SITE_NAME: ${SITE_NAME}
+      DEVELOPER_MODE: ${DEVELOPER_MODE}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      REDIS_CACHE: ${REDIS_CACHE}
+      REDIS_QUEUE: ${REDIS_QUEUE}
+    ports:
+      - "${HTTP_PORT}:8000"
+    volumes:
+      # The custom app, edited on the host, mounted into the bench.
+      - ../apps/mason:/workspace/apps/mason
+      - sites-data:/workspace/sites
+      - ./scripts:/workspace/scripts:ro
+    working_dir: /workspace
+    entrypoint: ["bash", "/workspace/scripts/entrypoint.sh"]
+
+volumes:
+  mariadb-data:
+  redis-cache-data:
+  redis-queue-data:
+  sites-data:

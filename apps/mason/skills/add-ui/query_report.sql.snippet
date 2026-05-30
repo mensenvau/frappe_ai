@@ -1,0 +1,14 @@
+-- Query Report SQL. Table name = `tab<DocType>` (spaces kept).
+-- Frappe substitutes %(filter)s params from the report's filter fields.
+
+SELECT
+    w.name        AS "Widget:Link/Widget:200",
+    w.status      AS "Status:Data:120",
+    w.creation    AS "Created:Datetime:160"
+FROM `tabWidget` w
+WHERE w.status = %(status)s
+ORDER BY w.creation DESC
+
+-- Column header syntax: "Label:Fieldtype:Width" (Link uses Label:Link/Target:Width).
+-- For permission-sensitive data prefer a Script Report using frappe.get_list,
+-- which applies user permissions automatically.

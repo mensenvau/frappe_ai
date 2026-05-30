@@ -1,0 +1,37 @@
+{
+  "doctype": "Workspace",
+  "name": "<Workspace Title>",
+  "label": "<Workspace Title>",
+  "module": "Mason",
+  "public": 1,
+  "is_hidden": 0,
+  "icon": "grid",
+  "title": "<Workspace Title>",
+  "shortcuts": [
+    {
+      "type": "DocType",
+      "label": "<DocType Name>",
+      "link_to": "<DocType Name>",
+      "color": "Blue"
+    }
+  ],
+  "links": [
+    {
+      "type": "Card Break",
+      "label": "<Card Title>"
+    },
+    {
+      "type": "Link",
+      "link_type": "DocType",
+      "label": "<DocType Name>",
+      "link_to": "<DocType Name>"
+    }
+  ],
+  "charts": [
+    {
+      "chart_name": "<Dashboard Chart Name>",
+      "label": "<Chart Label>"
+    }
+  ],
+  "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<Workspace Title>\"}}]"
+}

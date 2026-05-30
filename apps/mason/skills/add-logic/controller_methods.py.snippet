@@ -1,0 +1,22 @@
+# Controller lifecycle patterns — paste into mason/<module>/doctype/<name>/<name>.py
+
+import frappe
+from frappe import _
+from frappe.model.document import Document
+from frappe.utils import now_datetime
+
+
+class Widget(Document):
+    def validate(self):
+        # Guard an invariant; frappe.throw rolls back the save.
+        if self.status == "Active" and not self.owner_user:
+            frappe.throw(_("An Active Widget must have an owner."))
+
+    def before_save(self):
+        # Derive/normalize fields before persisting.
+        if self.has_value_changed("status") and self.status == "Archived":
+            self.archived_on = now_datetime()
+
+    def on_submit(self):
+        # Only for is_submittable=1 DocTypes.
+        frappe.msgprint(_("Widget {0} submitted.").format(self.name))

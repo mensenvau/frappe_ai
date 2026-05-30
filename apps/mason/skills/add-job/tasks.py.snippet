@@ -1,0 +1,16 @@
+# mason/<module>/tasks.py — scheduled/background task functions.
+
+import frappe
+from frappe import _
+
+
+def send_daily_digest():
+    """Idempotent daily job. Called by scheduler_events['daily']."""
+    try:
+        recipients = frappe.get_all("User", filters={"enabled": 1}, pluck="email")
+        # ... build and send ...
+        frappe.logger().info(f"mason: digest queued for {len(recipients)} users")
+        frappe.db.commit()
+    except Exception:
+        # Never let a scheduled job crash silently — record it.
+        frappe.log_error(title="mason: send_daily_digest failed")

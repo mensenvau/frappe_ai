@@ -1,0 +1,18 @@
+# Create a Role (idempotent).
+
+import frappe
+
+
+def ensure_role(role_name: str):
+    if not frappe.db.exists("Role", role_name):
+        frappe.get_doc({
+            "doctype": "Role",
+            "role_name": role_name,
+            "desk_access": 1,   # 1 = can use Desk; 0 = portal/website only
+        }).insert(ignore_permissions=True)
+        frappe.db.commit()
+
+
+# Then add the role to the Role fixtures filter in hooks.py:
+#   {"dt": "Role", "filters": [["name", "in", ["Widget Manager"]]]}
+# and run export-fixtures.

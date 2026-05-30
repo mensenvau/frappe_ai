@@ -1,0 +1,31 @@
+# Granting DocType permissions — two cases.
+
+# CASE A — app-owned DocType: add to its JSON "permissions" array (default-deny;
+# only the roles listed get anything):
+#
+#   "permissions": [
+#     { "role": "Widget Manager", "read": 1, "write": 1, "create": 1 },
+#     { "role": "Widget Viewer",  "read": 1 }
+#   ]
+
+# CASE B — core / external DocType: use a Custom DocPerm so core stays untouched.
+import frappe
+
+
+def grant(doctype: str, role: str, perms: dict):
+    frappe.get_doc({
+        "doctype": "Custom DocPerm",
+        "parent": doctype,
+        "parenttype": "DocType",
+        "parentfield": "permissions",
+        "role": role,
+        "read": perms.get("read", 0),
+        "write": perms.get("write", 0),
+        "create": perms.get("create", 0),
+        "delete": perms.get("delete", 0),
+        "permlevel": 0,
+    }).insert(ignore_permissions=True)
+    frappe.db.commit()
+
+# grant("ToDo", "Widget Manager", {"read": 1, "write": 1})
+# Custom DocPerm is exported via the export-fixtures skill.

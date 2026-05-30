@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Frappe / bench runtime (never committed — recreated by docker)
+sites/
+*.log
+node_modules/
+
+# Docker local overrides
+docker/docker-compose.override.yml
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

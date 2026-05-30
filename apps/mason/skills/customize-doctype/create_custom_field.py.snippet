@@ -1,0 +1,27 @@
+# Add a Custom Field to an existing DocType (core or app-owned) — reproducibly.
+# Run via `bench --site <site> execute` or inside a patch; then export-fixtures.
+
+import frappe
+from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
+
+def add_fields():
+    create_custom_fields(
+        {
+            "User": [   # <- target DocType (here: a core DocType, untouched)
+                {
+                    "fieldname": "mason_team",
+                    "label": "Mason Team",
+                    "fieldtype": "Link",
+                    "options": "Mason Team",      # link target DocType
+                    "insert_after": "full_name",
+                    "module": "Mason",            # REQUIRED for fixtures filter
+                },
+            ]
+        },
+        update=True,
+    )
+    frappe.db.commit()
+
+# After running: `bench export-fixtures` freezes this into
+# mason/fixtures/custom_field.json.

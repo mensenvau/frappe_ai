@@ -1,0 +1,24 @@
+# Script Report — mason/<module>/report/<name>/<name>.py
+# Returns (columns, data). Uses frappe.get_list so DocType permissions apply.
+
+import frappe
+
+
+def execute(filters=None):
+    filters = filters or {}
+
+    columns = [
+        {"label": "Widget", "fieldname": "name", "fieldtype": "Link",
+         "options": "Widget", "width": 200},
+        {"label": "Status", "fieldname": "status", "fieldtype": "Data", "width": 120},
+    ]
+
+    rows = frappe.get_list(
+        "Widget",
+        filters=filters,
+        fields=["name", "status"],
+        order_by="creation desc",
+    )
+    data = [[r["name"], r["status"]] for r in rows]
+
+    return columns, data
