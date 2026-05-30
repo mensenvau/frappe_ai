@@ -18,3 +18,7 @@ docker/docker-compose.override.yml
 Thumbs.db
 .idea/
 .vscode/
+
+# Claude Code runtime
+.claude/scheduled_tasks.lock
+.claude/
