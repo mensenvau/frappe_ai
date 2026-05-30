@@ -55,6 +55,20 @@ def check_controllers(app_pkg: Path) -> None:
             record(FAIL, "controller-parse", f"{py}: {e}")
 
 
+def check_no_bom(app_pkg: Path) -> None:
+    # A UTF-8 BOM breaks flit's __version__ parsing (pip install -e fails) and
+    # can confuse Frappe's JSON loaders. Catch it statically.
+    offenders = []
+    for p in app_pkg.rglob("*"):
+        if p.is_file() and p.suffix in {".py", ".json", ".txt", ".toml"}:
+            if p.read_bytes()[:3] == b"\xef\xbb\xbf":
+                offenders.append(str(p))
+    if offenders:
+        record(FAIL, "no-bom", "UTF-8 BOM in: " + ", ".join(offenders[:5]))
+    else:
+        record(PASS, "no-bom", "no BOM")
+
+
 def check_hooks(app_pkg: Path) -> None:
     hooks = app_pkg / "hooks.py"
     if not hooks.exists():
@@ -118,6 +132,7 @@ def main() -> int:
     check_hooks(app_pkg)
     check_fixtures(app_pkg)
     check_no_erpnext(app_pkg)
+    check_no_bom(app_pkg)
 
     failures = [r for r in results if r[0] == FAIL]
     for status, check, detail in results:
