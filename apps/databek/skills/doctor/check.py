@@ -96,7 +96,17 @@ def check_no_erpnext(app_pkg: Path) -> None:
 
 def main() -> int:
     root = Path(sys.argv[1] if len(sys.argv) > 1 else "apps/databek")
-    app_pkg = root / "databek" if (root / "databek").is_dir() else root
+    # The Python package dir is the inner folder that holds hooks.py. For a
+    # Frappe app `apps/<app>`, that is `apps/<app>/<app>`. Resolve generically so
+    # the same doctor works for databek, hr, crm, … (not hardcoded to databek).
+    if (root / root.name / "hooks.py").exists():
+        app_pkg = root / root.name
+    elif (root / "hooks.py").exists():
+        app_pkg = root
+    else:
+        # fall back: any immediate subdir containing hooks.py
+        app_pkg = next((d for d in root.iterdir()
+                        if d.is_dir() and (d / "hooks.py").exists()), root)
     if not app_pkg.exists():
         print(f"doctor: app package not found at {app_pkg}", file=sys.stderr)
         return 1

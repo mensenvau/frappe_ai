@@ -68,8 +68,10 @@ services:
       # ${this}/frappe-bench so bench creates that dir itself — venv paths stay
       # valid (no move). Init happens once; later runs reuse it.
       - bench-root:/home/frappe/bench-root
-      # The custom app, edited on the host; entrypoint symlinks it into the bench.
-      - ../apps/databek:/home/frappe/databek-src
+      # Databek apps, edited on the host; entrypoint symlinks each into the bench.
+      - ../apps/databek:/home/frappe/apps-src/databek
+      - ../apps/hr:/home/frappe/apps-src/hr
+      - ../apps/crm:/home/frappe/apps-src/crm
       - ./scripts:/home/frappe/scripts:ro
     working_dir: /home/frappe
     entrypoint: ["bash", "/home/frappe/scripts/entrypoint.sh"]

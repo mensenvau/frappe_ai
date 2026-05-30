@@ -1,0 +1,23 @@
+{
+  "creation": "2026-01-01 00:00:00.000000",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "name": "Employee Functional Role",
+  "module": "HR",
+  "custom": 0,
+  "istable": 1,
+  "field_order": ["role"],
+  "fields": [
+    {
+      "fieldname": "role",
+      "label": "Role",
+      "fieldtype": "Link",
+      "options": "Role",
+      "in_list_view": 1,
+      "reqd": 1
+    }
+  ],
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}

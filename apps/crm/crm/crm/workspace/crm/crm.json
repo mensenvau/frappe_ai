@@ -1,0 +1,32 @@
+{
+  "doctype": "Workspace",
+  "name": "CRM",
+  "label": "CRM",
+  "title": "CRM",
+  "module": "CRM",
+  "public": 1,
+  "is_hidden": 0,
+  "icon": "organization",
+  "sequence_id": 1.0,
+  "shortcuts": [
+    {
+      "type": "DocType",
+      "label": "Client",
+      "link_to": "Client",
+      "color": "Green"
+    }
+  ],
+  "links": [
+    {
+      "type": "Card Break",
+      "label": "Clients"
+    },
+    {
+      "type": "Link",
+      "link_type": "DocType",
+      "label": "Client",
+      "link_to": "Client"
+    }
+  ],
+  "content": "[{\"id\":\"crm_header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Databek CRM</span>\",\"col\":12}},{\"id\":\"crm_sc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client\",\"col\":4}}]"
+}

@@ -1,0 +1,2 @@
+[post_model_sync]
+hr.hr.setup.install.ensure_roles

@@ -1,0 +1,32 @@
+{
+  "doctype": "Workspace",
+  "name": "HR",
+  "label": "HR",
+  "title": "HR",
+  "module": "HR",
+  "public": 1,
+  "is_hidden": 0,
+  "icon": "users",
+  "sequence_id": 2.0,
+  "shortcuts": [
+    {
+      "type": "DocType",
+      "label": "Employee",
+      "link_to": "Employee",
+      "color": "Blue"
+    }
+  ],
+  "links": [
+    {
+      "type": "Card Break",
+      "label": "People"
+    },
+    {
+      "type": "Link",
+      "link_type": "DocType",
+      "label": "Employee",
+      "link_to": "Employee"
+    }
+  ],
+  "content": "[{\"id\":\"hr_header\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Databek HR</span>\",\"col\":12}},{\"id\":\"hr_sc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":4}}]"
+}

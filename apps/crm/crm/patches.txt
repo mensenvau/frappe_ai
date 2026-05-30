@@ -1,0 +1,2 @@
+[post_model_sync]
+crm.crm.setup.install.ensure_client_role
