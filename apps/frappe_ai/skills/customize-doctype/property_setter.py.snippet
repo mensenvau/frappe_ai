@@ -1,0 +1,25 @@
+# Override a property of an existing field/DocType without editing core.
+# Property Setter = a single property override, scoped to module "Frappe AI".
+
+import frappe
+from frappe.client import make_property_setter  # convenience helper
+
+
+def set_properties():
+    # Make ToDo's `priority` field required (ADDITIVE-ish — confirm if data
+    # already exists with empty priority; see RULES.md §4).
+    make_property_setter(
+        doctype="ToDo",
+        fieldname="priority",
+        property="reqd",
+        value="1",
+        property_type="Check",
+        for_doctype=False,   # False = property of a field; True = of the DocType
+    )
+    # Tag it to the Frappe AI module so fixtures pick it up.
+    ps = frappe.get_last_doc("Property Setter")
+    ps.module = "Frappe AI"
+    ps.save()
+    frappe.db.commit()
+
+# Then: `bench export-fixtures` -> frappe_ai/fixtures/property_setter.json

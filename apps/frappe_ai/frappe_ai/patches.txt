@@ -1,0 +1,3 @@
+# Data-migration patches run by `bench migrate`, in order.
+# Format: frappe_ai.patches.v0_0.<patch_module>
+# (empty — no patches yet)

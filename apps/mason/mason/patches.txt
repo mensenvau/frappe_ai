@@ -1,3 +1,0 @@
-# Data-migration patches run by `bench migrate`, in order.
-# Format: mason.patches.v0_0.<patch_module>
-# (empty — no patches yet)

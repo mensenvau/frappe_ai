@@ -1,20 +1,16 @@
 # ---------------------------------------------------------------------------
-# Mason platform — single-machine dev stack (Frappe v15, no ERPNext)
+# Frappe AI platform — single-machine dev stack (Frappe v15, no ERPNext)
 # ---------------------------------------------------------------------------
-# Brings up: mariadb + redis (cache & queue) + a Frappe bench container that
-# bind-mounts ../apps/mason into the bench so the AI's edits on the host are
-# live inside the container.
+# The frappe/bench image ships only the `bench` CLI — no bench instance. On
+# first run the entrypoint runs `bench init` (clones Frappe v15, builds a venv;
+# several minutes ONCE) directly INTO the persisted volume, so the Python venv's
+# absolute paths stay valid (no move). The host's apps/frappe_ai is bind-mounted and
+# symlinked into the bench, so edits stay live and version-controlled.
 #
-#   docker compose up -d            # start everything
-#   docker compose logs -f backend  # watch the bench bootstrap
+#   docker compose up -d
+#   docker compose logs -f backend     # watch first-run init (slow once)
 #   open http://localhost:${HTTP_PORT}
-#
-# The "backend" service runs scripts/entrypoint.sh which is idempotent:
-# first run creates the site + installs mason; later runs just (re)start bench.
 # ---------------------------------------------------------------------------
-
-x-frappe-image: &frappe-image
-  image: frappe/bench:latest
 
 services:
   mariadb:
@@ -32,7 +28,7 @@ services:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 5s
-      retries: 20
+      retries: 30
 
   redis-cache:
     image: redis:7-alpine
@@ -45,7 +41,7 @@ services:
       - redis-queue-data:/data
 
   backend:
-    <<: *frappe-image
+    image: frappe/bench:latest
     depends_on:
       mariadb:
         condition: service_healthy
@@ -54,7 +50,7 @@ services:
       redis-queue:
         condition: service_started
     environment:
-      FRAPPE_VERSION: ${FRAPPE_VERSION}
+      FRAPPE_BRANCH: ${FRAPPE_VERSION}
       SITE_NAME: ${SITE_NAME}
       DEVELOPER_MODE: ${DEVELOPER_MODE}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
@@ -63,18 +59,23 @@ services:
       DB_PORT: ${DB_PORT}
       REDIS_CACHE: ${REDIS_CACHE}
       REDIS_QUEUE: ${REDIS_QUEUE}
+      HTTP_PORT: ${HTTP_PORT}
+    user: frappe
     ports:
       - "${HTTP_PORT}:8000"
     volumes:
-      # The custom app, edited on the host, mounted into the bench.
-      - ../apps/mason:/workspace/apps/mason
-      - sites-data:/workspace/sites
-      - ./scripts:/workspace/scripts:ro
-    working_dir: /workspace
-    entrypoint: ["bash", "/workspace/scripts/entrypoint.sh"]
+      # Persisted bench ROOT (the parent). The entrypoint runs `bench init` into
+      # ${this}/frappe-bench so bench creates that dir itself — venv paths stay
+      # valid (no move). Init happens once; later runs reuse it.
+      - bench-root:/home/frappe/bench-root
+      # The custom app, edited on the host; entrypoint symlinks it into the bench.
+      - ../apps/frappe_ai:/home/frappe/frappe_ai-src
+      - ./scripts:/home/frappe/scripts:ro
+    working_dir: /home/frappe
+    entrypoint: ["bash", "/home/frappe/scripts/entrypoint.sh"]
 
 volumes:
   mariadb-data:
   redis-cache-data:
   redis-queue-data:
-  sites-data:
+  bench-root:
