@@ -1,4 +1,4 @@
-# Frappe AI platform
+# Databek platform
 
 An AI-extensible internal-tools platform on **Frappe Framework v15** — starting
 from an empty foundation, with **no ERPNext**. You describe what you want; the AI
@@ -11,9 +11,9 @@ See [`FRAPPE_AI.md`](FRAPPE_AI.md) for the full build brief.
 
 ```
 docker/                  # Frappe v15 dev stack (compose + entrypoint)
-apps/frappe_ai/              # the custom Frappe app (the empty foundation)
+apps/databek/              # the custom Frappe app (the empty foundation)
   RULES.md               # global law every skill obeys
-  frappe_ai/                 # app package: hooks.py, modules.txt, fixtures/, SKILL.md
+  databek/                 # app package: hooks.py, modules.txt, fixtures/, SKILL.md
   skills/                # the 10 skills: SKILL.md + templates/snippets
 FRAPPE_AI.md                 # the build brief
 ```
@@ -38,11 +38,11 @@ Tell the AI what you need, using one of the 4 Claude Code skills:
 - **`/manage-deploy`** — docker: status, start/stop/restart, logs, apply, backup, health.
 
 Under the hood these orchestrate the building-block contracts in
-[`apps/frappe_ai/skills/`](apps/frappe_ai/skills/) (create-doctype, add-logic,
+[`apps/databek/skills/`](apps/databek/skills/) (create-doctype, add-logic,
 add-ui, export-fixtures, run, doctor, …). Every change is logged in
-[`apps/frappe_ai/frappe_ai/CHANGELOG.md`](apps/frappe_ai/frappe_ai/CHANGELOG.md).
+[`apps/databek/databek/CHANGELOG.md`](apps/databek/databek/CHANGELOG.md).
 
-The rules of the game live in [`apps/frappe_ai/RULES.md`](apps/frappe_ai/RULES.md):
+The rules of the game live in [`apps/databek/RULES.md`](apps/databek/RULES.md):
 Frappe-only, core never modified, default-deny permissions, destructive changes
 require confirmation.
 ```

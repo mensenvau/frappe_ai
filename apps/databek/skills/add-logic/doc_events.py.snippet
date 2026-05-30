@@ -1,0 +1,27 @@
+# Cross-DocType / core-DocType reactions via hooks.py doc_events.
+#
+# STEP 1 — wire it in databek/hooks.py, between the markers:
+#
+#   # >>> DATABEK:doc_events:start
+#   doc_events = {
+#       "User": {  # reacting to a CORE DocType without editing it
+#           "after_insert": "databek.<module>.events.on_user_created",
+#       },
+#       "Widget": {
+#           "on_trash": "databek.<module>.events.on_widget_deleted",
+#       },
+#   }
+#   # <<< DATABEK:doc_events:end
+#
+# STEP 2 — implement handlers in databek/<module>/events.py:
+
+import frappe
+
+
+def on_user_created(doc, method=None):
+    # `doc` is the just-inserted User; `method` is the event name.
+    frappe.logger().info(f"databek: new user {doc.name}")
+
+
+def on_widget_deleted(doc, method=None):
+    frappe.logger().info(f"databek: widget {doc.name} deleted")

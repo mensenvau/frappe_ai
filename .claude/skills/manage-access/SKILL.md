@@ -1,6 +1,6 @@
 ---
 name: manage-access
-description: Manage and reason about roles & permissions in frappe_ai — audit who can do what, flag risky/over-broad grants, create/fix roles and DocType permissions (default-deny), and explain why a user can or cannot see something. Use for any "role", "permission", "access", "who can…", "why can't X see…" request.
+description: Manage and reason about roles & permissions in databek — audit who can do what, flag risky/over-broad grants, create/fix roles and DocType permissions (default-deny), and explain why a user can or cannot see something. Use for any "role", "permission", "access", "who can…", "why can't X see…" request.
 ---
 
 # manage-access
@@ -15,8 +15,8 @@ One skill for everything about access. It does four things:
 
 ## Always read first
 
-1. [`apps/frappe_ai/RULES.md`](../../../apps/frappe_ai/RULES.md) — §5 default-deny.
-2. [`apps/frappe_ai/skills/manage-permissions/SKILL.md`](../../../apps/frappe_ai/skills/manage-permissions/SKILL.md) — create/fix procedure + snippets.
+1. [`apps/databek/RULES.md`](../../../apps/databek/RULES.md) — §5 default-deny.
+2. [`apps/databek/skills/manage-permissions/SKILL.md`](../../../apps/databek/skills/manage-permissions/SKILL.md) — create/fix procedure + snippets.
 
 ## Audit & risk (read-only, run against the live site)
 
@@ -24,9 +24,9 @@ Use the helper, then summarize:
 
 ```bash
 docker compose -f docker/docker-compose.yml exec -T backend \
-  bench --site frappe_ai.localhost execute frappe_ai.frappe_ai.access_report.run
+  bench --site databek.localhost execute databek.databek.access_report.run
 ```
-(Script: [`apps/frappe_ai/skills/manage-access/access_report.py`](../../../apps/frappe_ai/skills/manage-access/access_report.py) — copy it into the app package as `frappe_ai/access_report.py` the first time, then call it.)
+(Script: [`apps/databek/skills/manage-access/access_report.py`](../../../apps/databek/skills/manage-access/access_report.py) — copy it into the app package as `databek/access_report.py` the first time, then call it.)
 
 Report a table: Role × DocType × (r/w/c/d). Then a **RISK** section flagging:
 - any role with broad write/delete it doesn't need,

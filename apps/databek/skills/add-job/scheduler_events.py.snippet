@@ -1,0 +1,19 @@
+# Wire scheduled jobs in databek/hooks.py, between the markers:
+#
+#   # >>> DATABEK:scheduler_events:start
+#   scheduler_events = {
+#       "daily": [
+#           "databek.<module>.tasks.send_daily_digest",
+#       ],
+#       "hourly": [
+#           "databek.<module>.tasks.sync_external",
+#       ],
+#       "cron": {
+#           "*/15 * * * *": ["databek.<module>.tasks.poll_queue"],  # every 15 min
+#           "0 2 * * 1":   ["databek.<module>.tasks.weekly_cleanup"], # Mon 02:00
+#       },
+#   }
+#   # <<< DATABEK:scheduler_events:end
+#
+# Frequencies: all, hourly, daily, weekly, monthly, hourly_long, daily_long, ...
+# The scheduler must be enabled:  bench --site <site> enable-scheduler

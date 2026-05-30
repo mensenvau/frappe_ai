@@ -1,10 +1,10 @@
 # ---------------------------------------------------------------------------
-# Frappe AI platform — single-machine dev stack (Frappe v15, no ERPNext)
+# Databek platform — single-machine dev stack (Frappe v15, no ERPNext)
 # ---------------------------------------------------------------------------
 # The frappe/bench image ships only the `bench` CLI — no bench instance. On
 # first run the entrypoint runs `bench init` (clones Frappe v15, builds a venv;
 # several minutes ONCE) directly INTO the persisted volume, so the Python venv's
-# absolute paths stay valid (no move). The host's apps/frappe_ai is bind-mounted and
+# absolute paths stay valid (no move). The host's apps/databek is bind-mounted and
 # symlinked into the bench, so edits stay live and version-controlled.
 #
 #   docker compose up -d
@@ -69,7 +69,7 @@ services:
       # valid (no move). Init happens once; later runs reuse it.
       - bench-root:/home/frappe/bench-root
       # The custom app, edited on the host; entrypoint symlinks it into the bench.
-      - ../apps/frappe_ai:/home/frappe/frappe_ai-src
+      - ../apps/databek:/home/frappe/databek-src
       - ./scripts:/home/frappe/scripts:ro
     working_dir: /home/frappe
     entrypoint: ["bash", "/home/frappe/scripts/entrypoint.sh"]

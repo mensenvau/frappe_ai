@@ -1,6 +1,6 @@
 ---
 name: build
-description: Build a complete feature in frappe_ai from one plain request — the data model, its business logic, AND the UI to use it, in one pass. Use when the user says "I need a <feature>", "add a <thing> with these fields", "make me a <X> that does <Y>". This is the main everyday skill.
+description: Build a complete feature in databek from one plain request — the data model, its business logic, AND the UI to use it, in one pass. Use when the user says "I need a <feature>", "add a <thing> with these fields", "make me a <X> that does <Y>". This is the main everyday skill.
 ---
 
 # build
@@ -21,8 +21,8 @@ use `/manage-deploy`.
 
 ## Always read first (this is how you "remember" across sessions)
 
-1. [`apps/frappe_ai/RULES.md`](../../../apps/frappe_ai/RULES.md) — global law.
-2. [`apps/frappe_ai/MODULES.md`](../../../apps/frappe_ai/MODULES.md) — the index
+1. [`apps/databek/RULES.md`](../../../apps/databek/RULES.md) — global law.
+2. [`apps/databek/MODULES.md`](../../../apps/databek/MODULES.md) — the index
    of every module already built. **Read this first to know what exists.**
 3. [`ARCHITECTURE.md`](../../../ARCHITECTURE.md) — the overall Databek plan +
    build phases, so a new feature lands in the right module.
@@ -34,24 +34,24 @@ use `/manage-deploy`.
 1. **Clarify only if blocking.** Infer sensible fields/types; ask only when a
    choice changes the schema materially.
 2. **Model** — for each new model, follow
-   [`apps/frappe_ai/skills/create-doctype/SKILL.md`](../../../apps/frappe_ai/skills/create-doctype/SKILL.md)
-   and its templates. Write `apps/frappe_ai/frappe_ai/<module>/doctype/<name>/`.
+   [`apps/databek/skills/create-doctype/SKILL.md`](../../../apps/databek/skills/create-doctype/SKILL.md)
+   and its templates. Write `apps/databek/databek/<module>/doctype/<name>/`.
 3. **Logic** — validations, computed fields, state transitions, APIs: follow
-   [`apps/frappe_ai/skills/add-logic/SKILL.md`](../../../apps/frappe_ai/skills/add-logic/SKILL.md).
+   [`apps/databek/skills/add-logic/SKILL.md`](../../../apps/databek/skills/add-logic/SKILL.md).
 4. **UI** — list/menu/dashboard/report so the feature is reachable: follow
-   [`apps/frappe_ai/skills/add-ui/SKILL.md`](../../../apps/frappe_ai/skills/add-ui/SKILL.md).
+   [`apps/databek/skills/add-ui/SKILL.md`](../../../apps/databek/skills/add-ui/SKILL.md).
 5. **Access** — if the feature implies who-can-do-what, hand the role/permission
    part to `/manage-access` (or apply default-deny perms inline).
 6. **Freeze** — `export-fixtures` for any config records
-   ([contract](../../../apps/frappe_ai/skills/export-fixtures/SKILL.md)).
+   ([contract](../../../apps/databek/skills/export-fixtures/SKILL.md)).
 7. **Remember** — write/update the module's `SKILL.md` (use
-   [`module.SKILL.template.md`](../../../apps/frappe_ai/skills/create-doctype/module.SKILL.template.md))
+   [`module.SKILL.template.md`](../../../apps/databek/skills/create-doctype/module.SKILL.template.md))
    AND add/update its row in
-   [`apps/frappe_ai/MODULES.md`](../../../apps/frappe_ai/MODULES.md). This is what
+   [`apps/databek/MODULES.md`](../../../apps/databek/MODULES.md). This is what
    lets the next `/build` find and respect this module. **Do not skip this.**
 8. **Run** — apply via `/manage-deploy` (migrate + build), then point the user to
    <http://localhost:8080>.
-9. **Log** — append one line per artifact to `apps/frappe_ai/frappe_ai/CHANGELOG.md`.
+9. **Log** — append one line per artifact to `apps/databek/databek/CHANGELOG.md`.
 
 ## Rules
 

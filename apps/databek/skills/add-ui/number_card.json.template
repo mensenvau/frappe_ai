@@ -1,0 +1,12 @@
+{
+  "doctype": "Number Card",
+  "name": "<Card Name>",
+  "label": "<Card Label>",
+  "module": "Databek",
+  "type": "Document Type",
+  "document_type": "<DocType Name>",
+  "function": "Count",
+  "is_public": 1,
+  "filters_json": "[]",
+  "color": "#29CD42"
+}

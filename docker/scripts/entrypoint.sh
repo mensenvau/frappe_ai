@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
-# Frappe AI bench entrypoint — idempotent bootstrap on the official frappe/bench
+# Databek bench entrypoint — idempotent bootstrap on the official frappe/bench
 # image (which ships ONLY the bench CLI; the bench itself is created here).
 # ---------------------------------------------------------------------------
 # Runs as the `frappe` user. The bench-root volume mountpoint is root-owned, so
@@ -12,8 +12,8 @@
 # moving the bench breaks env/bin/python). Init happens once per volume.
 #
 # First run:  chown -> bench init bench-root/frappe-bench (Frappe v15, ~minutes)
-#             -> symlink mounted frappe_ai app -> configure db/redis
-#             -> create empty site -> install frappe_ai -> developer_mode=1
+#             -> symlink mounted databek app -> configure db/redis
+#             -> create empty site -> install databek -> developer_mode=1
 #             -> migrate/build/clear-cache -> serve.
 # Later runs: bench already initialized -> migrate/build/clear-cache -> serve.
 #
@@ -23,12 +23,12 @@ set -euo pipefail
 
 ROOT=/home/frappe/bench-root
 BENCH_DIR="$ROOT/frappe-bench"
-FRAPPE_AI_SRC=/home/frappe/frappe_ai-src
-SITE="${SITE_NAME:-frappe_ai.localhost}"
-APP=frappe_ai
+FRAPPE_AI_SRC=/home/frappe/databek-src
+SITE="${SITE_NAME:-databek.localhost}"
+APP=databek
 FRAPPE_BRANCH="${FRAPPE_BRANCH:-version-15}"
 
-log() { echo "[frappe_ai-entrypoint] $*"; }
+log() { echo "[databek-entrypoint] $*"; }
 
 # --- 0. Make the persisted volume writable by frappe -------------------------
 if [ ! -w "$ROOT" ]; then
@@ -53,14 +53,14 @@ fi
 
 cd "$BENCH_DIR"
 
-# --- 2. Symlink + install the mounted frappe_ai app ------------------------------
+# --- 2. Symlink + install the mounted databek app ------------------------------
 if [ -d "$FRAPPE_AI_SRC" ] && [ ! -e "$BENCH_DIR/apps/$APP" ]; then
-  log "Linking mounted frappe_ai app into the bench..."
+  log "Linking mounted databek app into the bench..."
   ln -s "$FRAPPE_AI_SRC" "$BENCH_DIR/apps/$APP"
 fi
 if [ -d "$BENCH_DIR/apps/$APP" ]; then
   # Ensure apps.txt ends with a newline before appending, else the new app name
-  # concatenates onto the previous line (e.g. "frappe" + "frappe_ai").
+  # concatenates onto the previous line (e.g. "frappe" + "databek").
   APPS_TXT="$BENCH_DIR/sites/apps.txt"
   if ! grep -qx "$APP" "$APPS_TXT" 2>/dev/null; then
     [ -s "$APPS_TXT" ] && [ -n "$(tail -c1 "$APPS_TXT")" ] && echo >> "$APPS_TXT"
@@ -80,7 +80,7 @@ if [ -d "$BENCH_DIR/apps/$APP" ]; then
 fi
 
 # --- 2b. Heal a half-created site from a previous failed run ------------------
-# If the site dir exists but frappe_ai isn't recorded as installed, the prior
+# If the site dir exists but databek isn't recorded as installed, the prior
 # new-site failed mid-install; drop it so step 4 recreates it cleanly.
 if [ -d "$BENCH_DIR/sites/$SITE" ]; then
   if ! bench --site "$SITE" list-apps 2>/dev/null | grep -qx "$APP"; then
@@ -124,5 +124,5 @@ log "Clearing cache..."
 bench --site "$SITE" clear-cache
 
 # --- 7. Serve ----------------------------------------------------------------
-log "Frappe AI is up. Desk: http://localhost:${HTTP_PORT:-8080}  (Administrator / ${ADMIN_PASSWORD:-admin})"
+log "Databek is up. Desk: http://localhost:${HTTP_PORT:-8080}  (Administrator / ${ADMIN_PASSWORD:-admin})"
 exec bench serve --port 8000

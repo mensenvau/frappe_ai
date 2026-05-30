@@ -1,4 +1,4 @@
-# Walkthrough — how Frappe AI grows
+# Walkthrough — how Databek grows
 
 This shows the full build loop end-to-end with one concrete example, so you can
 see how a plain request becomes live UI. Nothing here is pre-built; it's a
@@ -15,7 +15,7 @@ recipe the AI follows on demand.
 ```bash
 cd docker
 docker compose up -d
-docker compose logs -f backend     # wait for: "Frappe AI is up. Desk: http://localhost:8080"
+docker compose logs -f backend     # wait for: "Databek is up. Desk: http://localhost:8080"
 ```
 
 Open <http://localhost:8080>, log in as `Administrator` / `admin`. You get an
@@ -25,21 +25,21 @@ empty Desk — no business DocTypes. That's the foundation.
 
 ## 1. Example request: "I need a Widget model with a status, owned by a user"
 
-The AI picks **create-doctype** (reads `apps/frappe_ai/skills/create-doctype/SKILL.md`
-and `apps/frappe_ai/RULES.md` first).
+The AI picks **create-doctype** (reads `apps/databek/skills/create-doctype/SKILL.md`
+and `apps/databek/RULES.md` first).
 
 It writes, from the templates in that skill folder:
 
 ```
-apps/frappe_ai/frappe_ai/catalog/__init__.py
-apps/frappe_ai/frappe_ai/catalog/doctype/__init__.py
-apps/frappe_ai/frappe_ai/catalog/doctype/widget/__init__.py
-apps/frappe_ai/frappe_ai/catalog/doctype/widget/widget.json     # schema
-apps/frappe_ai/frappe_ai/catalog/doctype/widget/widget.py       # controller
-apps/frappe_ai/frappe_ai/catalog/SKILL.md                        # module contract
+apps/databek/databek/catalog/__init__.py
+apps/databek/databek/catalog/doctype/__init__.py
+apps/databek/databek/catalog/doctype/widget/__init__.py
+apps/databek/databek/catalog/doctype/widget/widget.json     # schema
+apps/databek/databek/catalog/doctype/widget/widget.py       # controller
+apps/databek/databek/catalog/SKILL.md                        # module contract
 ```
 
-and adds `Catalog` to `apps/frappe_ai/frappe_ai/modules.txt`.
+and adds `Catalog` to `apps/databek/databek/modules.txt`.
 
 `widget.json` (from `doctype.json.template`) has `title`, `status`, and an
 `owner_user` Link → User, with a single `System Manager` permission (default-deny).
@@ -65,14 +65,14 @@ the role names to the `Role` fixtures filter in `hooks.py`.
 
 The AI picks **add-ui**: creates a Workspace (shortcut to Widget) and a Dashboard
 Chart (`Count` of Widget over time) from the `add-ui` templates, all
-`module = "Frappe AI"`.
+`module = "Databek"`.
 
 ## 5. Freeze + run
 
 ```bash
 # from repo root
-apps/frappe_ai/skills/export-fixtures/run.sh        # freezes roles, workspace, chart
-apps/frappe_ai/skills/run/apply.sh                  # migrate + build + clear-cache
+apps/databek/skills/export-fixtures/run.sh        # freezes roles, workspace, chart
+apps/databek/skills/run/apply.sh                  # migrate + build + clear-cache
 ```
 
 (Or just `docker compose restart backend`, which re-runs the entrypoint's
@@ -80,10 +80,10 @@ migrate/build.)
 
 ## 6. Verify
 
-`apps/frappe_ai/skills/doctor/check.py apps/frappe_ai` should still print all-pass, and
+`apps/databek/skills/doctor/check.py apps/databek` should still print all-pass, and
 the Desk now shows the **Catalog** workspace, the **Widget** list, the validation
 rule firing, and the count chart. The AI appended one line per step to
-`apps/frappe_ai/frappe_ai/CHANGELOG.md`.
+`apps/databek/databek/CHANGELOG.md`.
 
 ---
 

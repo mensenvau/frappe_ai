@@ -24,7 +24,7 @@ the Customer module, the Project module, the Payroll module — all of them.
 You only add a new intent skill if you invent a genuinely new *kind of action*
 (rare).
 
-### 2. Module memory (`apps/frappe_ai/frappe_ai/<module>/SKILL.md`) — GROWS per module
+### 2. Module memory (`apps/databek/databek/<module>/SKILL.md`) — GROWS per module
 This is the part that "remembers." Every time `/build` creates or extends a
 module, it writes that module's own `SKILL.md`: its domain, DocTypes, invariants,
 APIs, AI hooks, prohibitions. **Claude writes this itself** as the last step of
@@ -38,7 +38,7 @@ building — you don't write it by hand.
 You type /build  "add invoices to projects"
         │
         ▼
-1. Reads apps/frappe_ai/MODULES.md      ← the INDEX of every module that exists
+1. Reads apps/databek/MODULES.md      ← the INDEX of every module that exists
 2. Sees "projects" is already built → opens projects/SKILL.md   ← full memory
 3. Builds the change, respecting the existing schema & invariants
 4. Updates projects/SKILL.md            ← writes new memory
@@ -54,12 +54,12 @@ and step 2 re-reads the module contract. Nothing is forgotten between sessions.
 
 | File | Role |
 |------|------|
-| [`apps/frappe_ai/MODULES.md`](apps/frappe_ai/MODULES.md) | **Index** — one line per built module → its SKILL.md. The first thing `/build` reads. |
-| `apps/frappe_ai/frappe_ai/<module>/SKILL.md` | **Per-module memory** — full context for that module. |
-| [`apps/frappe_ai/frappe_ai/CHANGELOG.md`](apps/frappe_ai/frappe_ai/CHANGELOG.md) | **History** — one line per change (what · skill · rule). |
+| [`apps/databek/MODULES.md`](apps/databek/MODULES.md) | **Index** — one line per built module → its SKILL.md. The first thing `/build` reads. |
+| `apps/databek/databek/<module>/SKILL.md` | **Per-module memory** — full context for that module. |
+| [`apps/databek/databek/CHANGELOG.md`](apps/databek/databek/CHANGELOG.md) | **History** — one line per change (what · skill · rule). |
 
 Plus [`ARCHITECTURE.md`](ARCHITECTURE.md) (the long-term plan) and
-[`apps/frappe_ai/RULES.md`](apps/frappe_ai/RULES.md) (the laws), which `/build`
+[`apps/databek/RULES.md`](apps/databek/RULES.md) (the laws), which `/build`
 also reads every time.
 
 ---

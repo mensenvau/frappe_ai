@@ -1,0 +1,26 @@
+# Whitelisted API endpoint — callable from client JS or HTTP.
+# Method path: databek.<module>.doctype.<name>.<name>.do_thing
+
+import frappe
+from frappe import _
+
+
+@frappe.whitelist()
+def do_thing(name: str) -> dict:
+    # 1. Load the doc.
+    doc = frappe.get_doc("Widget", name)
+
+    # 2. Enforce permissions explicitly — whitelisting alone is NOT authorization.
+    doc.check_permission("write")
+
+    # 3. Do the work.
+    doc.status = "Active"
+    doc.save()
+
+    # 4. Return JSON-serializable data.
+    return {"name": doc.name, "status": doc.status}
+
+
+# For methods that must run regardless of role, restrict instead of opening:
+# @frappe.whitelist(allow_guest=False)  # default; never set allow_guest=True
+#                                       # unless the endpoint is truly public.

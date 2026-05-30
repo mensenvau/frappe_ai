@@ -1,4 +1,4 @@
-# docker/ — Frappe AI dev stack
+# docker/ — Databek dev stack
 
 Single-machine Frappe v15 stack. **No ERPNext.**
 
@@ -21,7 +21,7 @@ Open <http://localhost:8080> → login `Administrator` / `admin`.
 | `redis-queue` | Frappe job queue + socketio            |
 | `backend`     | Frappe bench (serves Desk on `:8000`)  |
 
-The `frappe_ai` app at `../apps/frappe_ai` is **bind-mounted** into the bench, so edits
+The `databek` app at `../apps/databek` is **bind-mounted** into the bench, so edits
 the AI makes on the host are immediately visible inside the container. Run the
 `run` skill (or `docker compose restart backend`) to apply schema/asset changes.
 
@@ -29,7 +29,7 @@ the AI makes on the host are immediately visible inside the container. Run the
 
 `scripts/entrypoint.sh` is idempotent:
 
-- **First run** — inits the bench, creates the empty site, installs `frappe_ai`,
+- **First run** — inits the bench, creates the empty site, installs `databek`,
   sets `developer_mode=1`, migrates, builds, serves.
 - **Later runs** — detects the existing site and just migrates + builds +
   clears cache, then serves.

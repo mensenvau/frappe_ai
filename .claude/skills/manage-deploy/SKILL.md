@@ -1,6 +1,6 @@
 ---
 name: manage-deploy
-description: Manage the Frappe AI Docker deployment — start/stop/restart the stack, view status & logs, apply changes (migrate + build + clear-cache), back up / restore the site, and run a health check. Use for "run it", "start/stop", "restart", "show logs", "status", "apply my changes", "backup", "is it healthy?".
+description: Manage the Databek Docker deployment — start/stop/restart the stack, view status & logs, apply changes (migrate + build + clear-cache), back up / restore the site, and run a health check. Use for "run it", "start/stop", "restart", "show logs", "status", "apply my changes", "backup", "is it healthy?".
 ---
 
 # manage-deploy
@@ -10,8 +10,8 @@ compose file at `docker/docker-compose.yml`.
 
 ## Always read first
 
-1. [`apps/frappe_ai/skills/run/SKILL.md`](../../../apps/frappe_ai/skills/run/SKILL.md) — the run contract.
-2. [`apps/frappe_ai/skills/doctor/SKILL.md`](../../../apps/frappe_ai/skills/doctor/SKILL.md) — health check.
+1. [`apps/databek/skills/run/SKILL.md`](../../../apps/databek/skills/run/SKILL.md) — the run contract.
+2. [`apps/databek/skills/doctor/SKILL.md`](../../../apps/databek/skills/doctor/SKILL.md) — health check.
 
 ## Commands by intent
 
@@ -23,7 +23,7 @@ docker compose -f docker/docker-compose.yml ps
 **Start / first-run bootstrap** (first run is slow ~10 min: clones Frappe + venv once)
 ```bash
 docker compose -f docker/docker-compose.yml up -d
-docker compose -f docker/docker-compose.yml logs -f backend   # wait for "Frappe AI is up"
+docker compose -f docker/docker-compose.yml logs -f backend   # wait for "Databek is up"
 ```
 
 **Logs**
@@ -33,7 +33,7 @@ docker compose -f docker/docker-compose.yml logs backend --tail 80
 
 **Apply changes** (after editing artifacts — migrate + build + clear-cache, no full restart)
 ```bash
-apps/frappe_ai/skills/run/apply.sh
+apps/databek/skills/run/apply.sh
 # or:
 docker compose -f docker/docker-compose.yml restart backend
 ```
@@ -45,13 +45,13 @@ docker compose -f docker/docker-compose.yml stop
 
 **Health check** (static, no bench needed)
 ```bash
-python apps/frappe_ai/skills/doctor/check.py apps/frappe_ai
+python apps/databek/skills/doctor/check.py apps/databek
 ```
 
 **Backup the site**
 ```bash
 docker compose -f docker/docker-compose.yml exec -T backend \
-  bench --site frappe_ai.localhost backup --with-files
+  bench --site databek.localhost backup --with-files
 ```
 
 ## Pre-flight

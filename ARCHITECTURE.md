@@ -10,7 +10,7 @@
 > A separate modern **React (Next.js) app** in `frontend/` is **only the public
 > Databek site** (marketing + public job openings + apply form). The **AI layer
 > is provider-agnostic** (default **OpenAI**, **Gemini** as a drop-in adapter,
-> configured by env — not hardcoded). `frappe_ai` is the backend app package;
+> configured by env — not hardcoded). `databek` is the backend app package;
 > **Databek** is the brand.
 >
 > **Status: PLAN ONLY — nothing here is built yet.** This document is for review.
@@ -56,7 +56,7 @@ A person = one **User** + one **Employee** or one **Client** record linked to it
 | level: `Intern` / `Engineer` / `Manager` | P1 (hr) | seniority axis; Manager can approve |
 
 Brand note: product/UI/email brand is **Databek**; backend app package stays
-`frappe_ai` (the framework layer).
+`databek` (the framework layer).
 
 ---
 
@@ -131,7 +131,7 @@ Frappe "module" = a folder of DocTypes. Proposed modules and their DocTypes
 - **AI Interaction** — log: provider, model, actor, module, prompt, response,
   tokens, cost, action taken. (RULES §9.)
 - **AI Action** (optional) — a proposed action awaiting human confirm.
-- Service code `frappe_ai/ai/` — a **provider interface** (`generate()`,
+- Service code `databek/ai/` — a **provider interface** (`generate()`,
   `embed()`) with adapters `openai.py` (**default**), `gemini.py`, … selected by
   config. Used by all modules. Capabilities: NL-command, assist/recommend,
   summarize/report, **applicant↔job fit scoring** (RULES §9). Swapping provider =
@@ -223,7 +223,7 @@ jobs, then `/manage-deploy` and verify, then move on.
 - React: **Next.js** for the public site (SSR → SEO for job pages). Confirmed:
   React is PUBLIC-ONLY; internal UI stays in Desk.
 - AI: provider-agnostic, **OpenAI default**, **Gemini** drop-in via config.
-  (Note: the app is named `frappe_ai`; the AI provider is independent of that
+  (Note: the app is named `databek`; the AI provider is independent of that
   name — OpenAI/Gemini, not necessarily Anthropic.)
 - Public API auth: read endpoints public (job list/detail); apply = public POST
   with rate-limit/captcha later.
